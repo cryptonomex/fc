@@ -257,8 +257,10 @@ namespace fc { namespace ecc {
       } FC_RETHROW_EXCEPTIONS( debug, "digest: ${digest}", ("digest",digest) );
     }
 
-    private_key::private_key()
-    {}
+    private_key::private_key(EC_KEY *key)
+    {
+        my->_key = key;
+    }
 
     private_key private_key::generate_from_seed( const fc::sha256& seed, const fc::sha256& offset )
     {
@@ -397,6 +399,11 @@ namespace fc { namespace ecc {
        */
     }
 
+    bool public_key::isCompressed() const
+    {
+        return EC_KEY_get_conv_form(my->_key) == POINT_CONVERSION_COMPRESSED;
+    }
+
     public_key::public_key()
     {
     }
@@ -428,6 +435,10 @@ namespace fc { namespace ecc {
 
        public_key pub;  
        pub.my->_key = EC_KEY_new_by_curve_name( NID_secp256k1 );
+
+       if (EC_KEY_get_conv_form(my->_key) == POINT_CONVERSION_COMPRESSED)
+           EC_KEY_set_conv_form(pub.my->_key, POINT_CONVERSION_COMPRESSED);
+
        EC_KEY_set_public_key( pub.my->_key, EC_KEY_get0_public_key( my->_key ) );
        return pub;
     }

@@ -6,6 +6,8 @@
 #include <fc/array.hpp>
 #include <fc/io/raw_fwd.hpp>
 
+typedef struct ec_key_st EC_KEY;
+
 namespace fc { 
 
   namespace ecc {
@@ -36,6 +38,7 @@ namespace fc {
 
            operator public_key_data()const { return serialize(); }
 
+           bool isCompressed() const;
 
            public_key( const public_key_data& v );
            public_key( const compact_signature& c, const fc::sha256& digest );
@@ -68,7 +71,7 @@ namespace fc {
     class private_key 
     {
         public:
-           private_key();
+           private_key( EC_KEY *key = nullptr );
            private_key( private_key&& pk );
            private_key( const private_key& pk );
            ~private_key();
