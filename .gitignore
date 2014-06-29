@@ -42,5 +42,6 @@ libfc_debug.a
 fc_automoc.cpp
 git_revision.cpp
 GitSHA3.cpp
+ntp_test
 
 *.sw*
