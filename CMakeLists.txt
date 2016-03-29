@@ -87,6 +87,7 @@ else ( WIN32 )
     set_property(TARGET secp256k1 PROPERTY IMPORTED_LOCATION ${binary_dir}/.libs/libsecp256k1${CMAKE_STATIC_LIBRARY_SUFFIX})
     set_property(TARGET secp256k1 PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/vendor/secp256k1-zkp/include)
     add_dependencies(secp256k1 project_secp256k1)
+    install( FILES ${binary_dir}/.libs/libsecp256k1${CMAKE_STATIC_LIBRARY_SUFFIX} DESTINATION lib/cryptonomex )
 endif ( WIN32 )
 # End configure secp256k1-zkp
 
