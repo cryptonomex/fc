@@ -397,7 +397,9 @@ namespace fc {
                 }
                 // slog( "jump to %p from %p", next, prev );
                 // fc_dlog( logger::get("fc_context"), "from ${from} to ${to}", ( "from", int64_t(prev) )( "to", int64_t(next) ) ); 
-#if BOOST_VERSION >= 105600
+#if BOOST_VERSION >= 106100
+                prev->my_context = bc::detail::jump_fcontext( next->my_context, 0 ).fctx;
+#elif BOOST_VERSION >= 105600
                 bc::jump_fcontext( &prev->my_context, next->my_context, 0 );
 #elif BOOST_VERSION >= 105300
                 bc::jump_fcontext( prev->my_context, next->my_context, 0 );
@@ -439,7 +441,9 @@ namespace fc {
 
                 // slog( "jump to %p from %p", next, prev );
                 // fc_dlog( logger::get("fc_context"), "from ${from} to ${to}", ( "from", int64_t(prev) )( "to", int64_t(next) ) );
-#if BOOST_VERSION >= 105600
+#if BOOST_VERSION >= 106100
+                prev->my_context = bc::detail::jump_fcontext( next->my_context, this ).fctx;
+#elif BOOST_VERSION >= 105600
                 bc::jump_fcontext( &prev->my_context, next->my_context, (intptr_t)this );
 #elif BOOST_VERSION >= 105300
                 bc::jump_fcontext( prev->my_context, next->my_context, (intptr_t)this );
@@ -467,9 +471,15 @@ namespace fc {
               return true;
            }
 
+#if BOOST_VERSION >= 106100
+           static void start_process_tasks( bc::detail::transfer_t my )
+           {
+              thread_d* self = (thread_d*)my.data;
+#else
            static void start_process_tasks( intptr_t my ) 
            {
               thread_d* self = (thread_d*)my;
+#endif
               try 
               {
                 self->process_tasks();
