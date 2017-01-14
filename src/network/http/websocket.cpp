@@ -210,6 +210,11 @@ namespace fc { namespace http {
                _ws_connection->close(code,reason);
             }
 
+            virtual std::string get_request_header(const std::string& key)override
+            {
+              return _ws_connection->get_request_header(key);
+            }
+
             T _ws_connection;
       };
 
