@@ -28,6 +28,8 @@ namespace fc { namespace http {
          void     set_session_data( fc::any d ){ _session_data = std::move(d); }
          fc::any& get_session_data() { return _session_data; }
 
+         virtual std::string get_request_header(const std::string& key) = 0;
+
          fc::signal<void()> closed;
       private:
          fc::any                                   _session_data;
